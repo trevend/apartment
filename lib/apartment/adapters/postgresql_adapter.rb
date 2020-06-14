@@ -96,15 +96,15 @@ module Apartment
         conn.execute(%(CREATE SCHEMA "#{tenant}"))
       end
 
-      def init_transaction
+      def init_transaction(conn)
         conn.execute(%(BEGIN))
       end
 
-      def commit_transaction
+      def commit_transaction(conn)
         conn.execute(%(COMMIT))
       end
 
-      def rollback
+      def rollback(conn)
         conn.execute(%(ROLLBACK))
       end
 

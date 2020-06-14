@@ -139,7 +139,7 @@ module Apartment
       protected
 
       def transactional_create(tenant)
-        init_transaction
+        init_transaction(conn)
         create_tenant(tenant)
 
         switch(tenant) do
@@ -150,21 +150,21 @@ module Apartment
 
           yield if block_given?
         end
-        commit_transaction
+        commit_transaction(conn)
       rescue *rescuable_exceptions => e
         Rails.logger.info "Captured exception #{e}"
-        rollback
+        rollback(conn)
       end
 
-      def init_transaction
+      def init_transaction(_conn)
         Rails.logger.info 'Adapter does not implement init_transaction'
       end
 
-      def commit_transaction
+      def commit_transaction(_conn)
         Rails.logger.info 'Adapter does not implement commit_transaction'
       end
 
-      def rollback
+      def rollback(_conn)
         Rails.logger.info 'Adapter does not implement rollback'
       end
 
