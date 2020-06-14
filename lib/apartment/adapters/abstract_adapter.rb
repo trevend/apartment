@@ -22,7 +22,7 @@ module Apartment
       #
       def create(tenant)
         run_callbacks :create do
-           transactional_create(tenant)
+          transactional_create(tenant)
         end
       end
 
@@ -157,15 +157,15 @@ module Apartment
       end
 
       def init_transaction
-        Rails.logger.info "Adapter does not implement init_transaction"
+        Rails.logger.info 'Adapter does not implement init_transaction'
       end
 
       def commit_transaction
-        Rails.logger.info "Adapter does not implement commit_transaction"
+        Rails.logger.info 'Adapter does not implement commit_transaction'
       end
 
       def rollback
-        Rails.logger.info "Adapter does not implement rollback"
+        Rails.logger.info 'Adapter does not implement rollback'
       end
 
       def process_excluded_model(excluded_model)
