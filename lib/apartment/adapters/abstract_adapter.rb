@@ -22,16 +22,7 @@ module Apartment
       #
       def create(tenant)
         run_callbacks :create do
-          create_tenant(tenant)
-
-          switch(tenant) do
-            import_database_schema
-
-            # Seed data if appropriate
-            seed_data if Apartment.seed_after_create
-
-            yield if block_given?
-          end
+           transactional_create(tenant)
         end
       end
 
@@ -146,6 +137,36 @@ module Apartment
       end
 
       protected
+
+      def transactional_create(tenant)
+        init_transaction
+        create_tenant(tenant)
+
+        switch(tenant) do
+          import_database_schema
+
+          # Seed data if appropriate
+          seed_data if Apartment.seed_after_create
+
+          yield if block_given?
+        end
+        commit_transaction
+      rescue *rescuable_exceptions => e
+        Rails.logger.info "Captured exception #{e}"
+        rollback
+      end
+
+      def init_transaction
+        Rails.logger.info "Adapter does not implement init_transaction"
+      end
+
+      def commit_transaction
+        Rails.logger.info "Adapter does not implement commit_transaction"
+      end
+
+      def rollback
+        Rails.logger.info "Adapter does not implement rollback"
+      end
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.establish_connection @config

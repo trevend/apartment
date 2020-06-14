@@ -96,6 +96,18 @@ module Apartment
         conn.execute(%(CREATE SCHEMA "#{tenant}"))
       end
 
+      def init_transaction
+        conn.execute(%(BEGIN))
+      end
+
+      def commit_transaction
+        conn.execute(%(COMMIT))
+      end
+
+      def rollback
+        conn.execute(%(ROLLBACK))
+      end
+
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
